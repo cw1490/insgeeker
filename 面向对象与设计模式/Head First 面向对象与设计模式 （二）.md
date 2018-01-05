@@ -325,43 +325,43 @@ public function __construct(int $duration, CostStrategy $strategy) {    $this->
 
 
 ```php
-class Test {
-    private static $obj = null;//属性值为对象,默认为null
+class Singleton {
+    //属性值为对象,默认为null
+    private static $obj = null;
 
     // 设置 一个封装的构造方法
     private function __construct() {
-        // 占位, 我就是不让你NEW我~~~
+        //占位, 我就是不让你NEW我~~~
     }
 
     //后门
-    public static function getObject() {
+    public static function getInstance() {
         echo "啊,我是后门,进吧!\n";
         if (self::$obj === null) {
-            // 实例化一个对象
-            self::$obj = new self();
+            self::$obj = new self();//实例化一个对象
         }
 
-        // 返回的属性 其实就是本对象
+        //返回的属性 其实就是本对象
         return self::$obj;
     }
 }
 
 /*
-Test::getObject();//使用静态方法访问该类里的方法
+Singleton::getInstance();//使用静态方法访问该类里的方法
 exit;
 */
 
-$t1 = Test::getObject();
-$t2 = Test::getObject();
-$t3 = Test::getObject();
-$t4 = Test::getObject();
-$t5 = Test::getObject();
-$t6 = Test::getObject();
-$t7 = Test::getObject();
-$t8 = Test::getObject();
+$s1 = Singleton::getInstance();
+$s2 = Singleton::getInstance();
+$s3 = Singleton::getInstance();
+$s4 = Singleton::getInstance();
+$s5 = Singleton::getInstance();
+$s6 = Singleton::getInstance();
+$s7 = Singleton::getInstance();
+$s8 = Singleton::getInstance();
 
 //判断 两个对象 是否是同一个对象
-if ($t1 === $t6) {
+if ($s1 === $s6) {
     echo "哦, Yes! 是同一个实例\n";
 } else {
     echo "哦, No! 不是同一个实例\n";
