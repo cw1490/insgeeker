@@ -1,4 +1,5 @@
 <?php
+	// 简单工厂
 	class operation {
 		protected  $num1 = 0;
 		protected  $num2 = 0;
