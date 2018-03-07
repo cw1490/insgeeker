@@ -1,4 +1,4 @@
-# Head First 面向对象与设计模式 （四）
+# Head First 面向对象与设计模式 （四） -- 原型模式
 
 ## 一、原型模式
 
@@ -261,9 +261,14 @@ class Person {
     }
 }
 
-$person = new Person("bob", 44);$person->setId(343);$person2 = clone $person;
+$person = new Person("bob", 44);
+$person->setId(343);
+$person2 = clone $person;
 
-// person2 结果如下name: bobage: 44id: 0
+// person2 结果如下
+name: bob
+age: 44
+id: 0
 ```
 
 

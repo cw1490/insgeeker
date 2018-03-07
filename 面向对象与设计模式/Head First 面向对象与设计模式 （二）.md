@@ -1,4 +1,4 @@
-# Head First 面向对象与设计模式 （二）
+# Head First 面向对象与设计模式 （二） -- 设计模式概述
 
 ## 一、UML复习
 
@@ -120,10 +120,33 @@
 ##### 2. Lesson类的代码
 
 ```php
-abstract class Lesson {    private $duration;    private $costStrategy;    public function __construct(int $duration, CostStrategy $strategy) {        $this->duration = $duration;        $this->costStrategy = $strategy;    }
-    // 委托操作代码    public function cost(): int {        return $this->costStrategy->cost($this);    }    public function chargeType(): string {        return $this->costStrategy->chargeType();    }    public function getDuration(): int {        return $this->duration;    }    // more lesson methods...}
+abstract class Lesson {
+    private $duration;
+    private $costStrategy;
+    public function __construct(int $duration, CostStrategy $strategy) {
+        $this->duration = $duration;
+        $this->costStrategy = $strategy;
+    }
+    // 委托操作代码
+    public function cost(): int {
+        return $this->costStrategy->cost($this);
+    }
+    public function chargeType(): string {
+        return $this->costStrategy->chargeType();
+    }
+    public function getDuration(): int {
+        return $this->duration;
+    }
+    // more lesson methods...
+}
 
-class Lecture extends Lesson {    // Lecture-specific implementations ...}class Seminar extends Lesson {    // Seminar-specific implementations ...}
+class Lecture extends Lesson {
+    // Lecture-specific implementations ...
+}
+
+class Seminar extends Lesson {
+    // Seminar-specific implementations ...
+}
 ```
 
 1. Lesson类需要一个作为属性的CostStrategy对象
@@ -136,7 +159,10 @@ class Lecture extends Lesson {    // Lecture-specific implementations ...}cl
 
 ```php
 // 定义费用策略
-abstract class CostStrategy {    abstract public function cost(Lesson $lesson): int;    abstract public function chargeType(): string;}
+abstract class CostStrategy {
+    abstract public function cost(Lesson $lesson): int;
+    abstract public function chargeType(): string;
+}
 // 实现固定模式付费
 class FixedCostStrategy extends CostStrategy {
 	public function cost(Lesson $lesson): int {
@@ -145,7 +171,16 @@ class FixedCostStrategy extends CostStrategy {
 	public function chargeType(): string {
 		return "fixed rate";
 	}
-}// 实现按时间付费类class TimedCostStrategy extends CostStrategy {    public function cost(Lesson $lesson): int {        return ($lesson->getDuration() * 5);    }    public function chargeType(): string {        return "hourly rate";    }}
+}
+// 实现按时间付费类
+class TimedCostStrategy extends CostStrategy {
+    public function cost(Lesson $lesson): int {
+        return ($lesson->getDuration() * 5);
+    }
+    public function chargeType(): string {
+        return "hourly rate";
+    }
+}
 ...
 ```
 
@@ -272,7 +307,10 @@ $mgr->register($lessons2);
 尽管如此,若参数的类型匹配限制过于严格,那么将无法得到多态带来的好处。下面是修改过的 Lesson类里的一段代码:
 
 ```php
-public function __construct(int $duration, FixedCostStrategy $strategy) {    $this->duration = $duration;    $this->costStrategy = $strategy;}
+public function __construct(int $duration, FixedCostStrategy $strategy) {
+    $this->duration = $duration;
+    $this->costStrategy = $strategy;
+}
 ```
 
 这个示例中的设计有两个问题。
@@ -284,7 +322,11 @@ public function __construct(int $duration, FixedCostStrategy $strategy) {    $t
 而通过要求一个公共的接口,你能将任何 Coststrategy实现合并到一个 Lesson对象
 
 ```php
-public function __construct(int $duration, CostStrategy $strategy) {    $this->duration = $duration;    $this->costStrategy = $strategy;}```
+public function __construct(int $duration, CostStrategy $strategy) {
+    $this->duration = $duration;
+    $this->costStrategy = $strategy;
+}
+```
 
 换句话说,我们把 Lesson类从具体的费用计算中分离出来了。我们所做的就是提供接口并保证所提供的对象会实现接口
 

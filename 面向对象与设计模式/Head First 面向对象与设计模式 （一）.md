@@ -1,4 +1,4 @@
-# Head First 面向对象与设计模式 （一）
+# Head First 面向对象与设计模式 （一）-- 面向对象与UML
 
 ## 一、大纲
 
@@ -31,15 +31,30 @@
 ##### 1. 函数代码
 
 ```php
-// 数据格式 key:valuefunction readParams(string $source): array {    $params = [];    // read text parameters from $source    return $params;}
-function writeParams(array $params, string $source) {    // write text parameters to $source}
+// 数据格式 key:value
+function readParams(string $source): array {
+    $params = [];
+    // read text parameters from $source
+    return $params;
+}
+
+function writeParams(array $params, string $source) {
+    // write text parameters to $source
+}
 ```
 
 ##### 2. 客户端代码
 
 ```php
-$file = __DIR__ . "/params.txt";$params = [
-    "key1" => "val1",    "key2" => "val2",    "key3" => "val3",];writeParams($params, $file);$output = readParams($file);print_r($output);
+$file = __DIR__ . "/params.txt";
+$params = [
+    "key1" => "val1",
+    "key2" => "val2",
+    "key3" => "val3",
+];
+writeParams($params, $file);
+$output = readParams($file);
+print_r($output);
 ```
 
 > 这段代码较为紧凑且比较易于维护，但如果需要新的格式呢？
@@ -62,8 +77,22 @@ $file = __DIR__ . "/params.txt";$params = [
 解决该需求有很多方案，我们可以在**读写函数**中检查文件扩展名，这也是我们很常见的解决方案，即面向过程式
 
 ```php
-function readParams(string $source): array {    $params = [];    if (preg_match("/\.xml$/i", $source)) {        // read XML parameters from $source    } else {        // read text parameters from $source    }    return $params;}
-function writeParams(array $params, string $source) {    if (preg_match("/\.xml$/i", $source)) {        // write XML parameters to $source    } else {        // write text parameters to $source}
+function readParams(string $source): array {
+    $params = [];
+    if (preg_match("/\.xml$/i", $source)) {
+        // read XML parameters from $source
+    } else {
+        // read text parameters from $source
+    }
+    return $params;
+}
+
+function writeParams(array $params, string $source) {
+    if (preg_match("/\.xml$/i", $source)) {
+        // write XML parameters to $source
+    } else {
+        // write text parameters to $source
+}
 ```
 
 如上所示，两个函数中都要检测文件扩展名，这样就存在了问题：
