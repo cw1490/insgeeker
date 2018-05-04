@@ -1,4 +1,4 @@
-# Head First 面向对象与设计模式 （四） -- 原型模式
+# Head First 面向对象与设计模式 （四）
 
 ## 一、原型模式
 
@@ -122,6 +122,8 @@ class concrateSmsPrototype implements smsPrototype {
 
 ### 2.1 `=` 直接复制
 
+    见代码 ch4/4_3.php
+
 ```php
 class person {}
 $p1 = new person();
@@ -135,6 +137,8 @@ $p2 = $p1; // `$p1` 和 `$p2` 指向同一个对象
 ### 2.1 `clone`复制
 
 > 如果想要获得一个对象的副本，而不是引用，可以使用 `clone` 关键字
+
+    见代码 ch4/4_4.php
 
 ```php
 class person{
@@ -166,6 +170,8 @@ PHP中的对象拷贝采用的是浅拷贝的方法，如果对象里的属性�
 
 * 浅复制可以保证所有基本数据类型的属性被完全复制
 * 在复制对象属性时，只复制引用，并不复制引用的对象
+
+    见代码 ch4/4_5.php
 
 ```php
 class address {
@@ -200,7 +206,7 @@ echo "p2 name = ".$p2->name." p2 palace = ".$p2->address->palace. "\n";
 // 结果
 修改前：
 p1 name = 少爷 p1 palace = 山东
-p2 name = cc p2 palace = 山东
+p2 name = 少爷 p2 palace = 山东
 修改后：
 p1 name = 少爷 p1 palace = 河北
 p2 name = 弯弯 p2 palace = 河北
@@ -261,14 +267,9 @@ class Person {
     }
 }
 
-$person = new Person("bob", 44);
-$person->setId(343);
-$person2 = clone $person;
+$person = new Person("bob", 44);$person->setId(343);$person2 = clone $person;
 
-// person2 结果如下
-name: bob
-age: 44
-id: 0
+// person2 结果如下name: bobage: 44id: 0
 ```
 
 
