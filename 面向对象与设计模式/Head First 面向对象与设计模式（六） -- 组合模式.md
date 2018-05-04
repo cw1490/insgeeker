@@ -52,23 +52,51 @@
 
 ```php
 abstract class Unit {
-    // 设置战斗单元对临近区域的攻击强度    abstract public function bombardStrength(): int;}
-// 射手类class Archer extends Unit {    public function bombardStrength(): int {        return 4; 
-    }}
-// 激光炮类class LaserCannonUnit extends Unit {    public function bombardStrength(): int {        return 44; 
-    }}
+    // 设置战斗单元对临近区域的攻击强度
+    abstract public function bombardStrength(): int;
+}
+// 射手类
+class Archer extends Unit {
+    public function bombardStrength(): int {
+        return 4; 
+    }
+}
+// 激光炮类
+class LaserCannonUnit extends Unit {
+    public function bombardStrength(): int {
+        return 44; 
+    }
+}
 ```
 
 #### 2.3.2 组合战斗单元
 
 ```php
 // 军队类
-class Army {    private $units = [];
-    //     public function addUnit(Unit $unit) {        array_push($this->units, $unit);    }
-    // 计算总的攻击强度    public function bombardStrength(): int {        $ret = 0;        foreach ($this->units as $unit) {            $ret += $unit->bombardStrength();        }        return $ret;    }}
+class Army {
+    private $units = [];
+    // 
+    public function addUnit(Unit $unit) {
+        array_push($this->units, $unit);
+    }
+    // 计算总的攻击强度
+    public function bombardStrength(): int {
+        $ret = 0;
+        foreach ($this->units as $unit) {
+            $ret += $unit->bombardStrength();
+        }
+        return $ret;
+    }
+}
 
 // 客户端代码
-$unit1 = new Archer();$unit2 = new LaserCannonUnit();$army = new Army();$army->addUnit($unit1);$army->addUnit($unit2);print $army->bombardStrength();```
+$unit1 = new Archer();
+$unit2 = new LaserCannonUnit();
+$army = new Army();
+$army->addUnit($unit1);
+$army->addUnit($unit2);
+print $army->bombardStrength();
+```
 
 当然，需求不可能一直这样简单，如果需要加入一些新的需求，比如军队应该可以与其他军队进行合并，（每个军队可以有自己的ID），同时军队还可以从整编中解散处理。
 
@@ -77,10 +105,22 @@ $unit1 = new Archer();$unit2 = new LaserCannonUnit();$army = new Army();$army
 这时，我们可以修改Army类，使之可以像添加Unit对象一样添加Army对象：
 
 ```php
-public function addArmy(Army $army) {    array_push($this->armies, $army);}
+public function addArmy(Army $army) {
+    array_push($this->armies, $army);
+}
 
-public function bombardStrength(): int {    $ret = 0;    foreach ($this->units as $unit) {        $ret += $unit->bombardStrength();    }    foreach ($this->armies as $army) {        $ret += $army->bombardStrength();    }    return $ret;}
+public function bombardStrength(): int {
+    $ret = 0;
+    foreach ($this->units as $unit) {
+        $ret += $unit->bombardStrength();
+    }
+    foreach ($this->armies as $army) {
+        $ret += $army->bombardStrength();
+    }
+    return $ret;
+}
 ```
+
 
 截止目前为止，需求（添加和抽取军队）还不算太复杂（但要记住，我们忽略的其他需求，比如：防御强度 - defensiveStrength()、移动矩阵 - movementRange()等方法也需要做类似的修改）
 
@@ -123,7 +163,11 @@ Army和TroopCarrier类都被设计为**组合对象**，用于**包含Unit对象
 可以看到，我们为所有的Unit对象设计了基本功能。
 
 ```php
-abstract class Unit {    abstract public function addUnit(Unit $unit);    abstract public function removeUnit(Unit $unit);    abstract public function bombardStrength(): int;}
+abstract class Unit {
+    abstract public function addUnit(Unit $unit);
+    abstract public function removeUnit(Unit $unit);
+    abstract public function bombardStrength(): int;
+}
 ```
 
 
@@ -166,14 +210,21 @@ Army::bombardStrength()方法只需遍历$units属性，调用每个Unit对象�
 组合模式的一个问题是如何实现add和remove方法。一般的组合模式会在抽象超类中添加add和remove方法。可以确保模式中的所有类都共享同一个接口，但这也意味着局部类必须也实现这些方法
 
 ```php
-class UnitException extends \Exception {}
+class UnitException extends \Exception {
+}
 
 class Archer extends Unit {
-    public function addUnit(Unit $unit) {        throw new UnitException(get_class($this) . " 是一个最小单元类，不能添加其他单元!");    }
-    public function removeUnit(Unit $unit) {        throw new UnitException(get_class($this) . " 是一个最小单元类，不能添加其他单元!");    }
+    public function addUnit(Unit $unit) {
+        throw new UnitException(get_class($this) . " 是一个最小单元类，不能添加其他单元!");
+    }
+    public function removeUnit(Unit $unit) {
+        throw new UnitException(get_class($this) . " 是一个最小单元类，不能添加其他单元!");
+    }
     
-    public function bombardStrength(): int {        return 4; 
-    }}
+    public function bombardStrength(): int {
+        return 4; 
+    }
+}
 ```
 
 #### 2.4.4 优化
@@ -181,8 +232,21 @@ class Archer extends Unit {
 实际上，我们并不希望在Archer对象中添加Unit对象(按常理，我们无法往一个射手中添加一个射手，这些基本单元应该无法添加其他单元)，所以在addUnit或removeUnit方式被代用时会抛出异常，这要求修改所有局部类的add/remove方法，因此我们可以再Unit类的addUnit或removeUnit方法中抛出异常
 
 ```php
-abstract class Unit {    public function addUnit(Unit $unit) {        throw new UnitException(get_class($this) . " 是一个最小单元类，不能添加其他单元!");    }    public function removeUnit(Unit $unit) {        throw new UnitException(get_class($this) . " 是一个最小单元类，不能添加其他单元!");    }    abstract public function bombardStrength(): int;}class Archer extends Unit {    public function bombardStrength(): int {        return 4; 
-    }}
+abstract class Unit {
+    public function addUnit(Unit $unit) {
+        throw new UnitException(get_class($this) . " 是一个最小单元类，不能添加其他单元!");
+    }
+    public function removeUnit(Unit $unit) {
+        throw new UnitException(get_class($this) . " 是一个最小单元类，不能添加其他单元!");
+    }
+    abstract public function bombardStrength(): int;
+}
+
+class Archer extends Unit {
+    public function bombardStrength(): int {
+        return 4; 
+    }
+}
 ```
 
 这样做可以去除局部类中的重复代码,但是同时组合类不再需要强制性地实现 addUnit()和remoⅴeUnit()方法了,这可能会带来问题
@@ -199,7 +263,21 @@ abstract class Unit {    public function addUnit(Unit $unit) {        throw ne
 通常来说，从客户的角度，我们最能体会到使用模式带来的好处，eg：
 
 ```php
-// 创建一个army对象$main_army = new Army();// 添加一些unit对象$main_army->addUnit(new Archer());$main_army->addUnit(new LaserCannonUnit());// 创建一个新的army对象$sub_army = new Army();// 添加一些unit对象$sub_army->addUnit(new Archer());$sub_army->addUnit(new Archer());$sub_army->addUnit(new Archer());// 把第二个army对象添加到第一个army对象中去$main_army->addUnit($sub_army);// 所有的攻击强度计算都在幕后计算print "attacking with strength: {$main_army->bombardStrength()}\n";
+// 创建一个army对象
+$main_army = new Army();
+// 添加一些unit对象
+$main_army->addUnit(new Archer());
+$main_army->addUnit(new LaserCannonUnit());
+// 创建一个新的army对象
+$sub_army = new Army();
+// 添加一些unit对象
+$sub_army->addUnit(new Archer());
+$sub_army->addUnit(new Archer());
+$sub_army->addUnit(new Archer());
+// 把第二个army对象添加到第一个army对象中去
+$main_army->addUnit($sub_army);
+// 所有的攻击强度计算都在幕后计算
+print "attacking with strength: {$main_army->bombardStrength()}\n";
 ```
 
 > 组合结构的所有复杂性都被完全隐藏了
@@ -230,7 +308,12 @@ abstract class Unit {    public function addUnit(Unit $unit) {        throw ne
 将组合类分解为getCompositeUnit子类，并删除add/remove方法
 
 ```php
-abstract class Unit {    public function getComposite() {        return null;    }    abstract public function bombardStrength(): int;}
+abstract class Unit {
+    public function getComposite() {
+        return null;
+    }
+    abstract public function bombardStrength(): int;
+}
 ```
 
 #### 2.6.2 新增getComposite方法
