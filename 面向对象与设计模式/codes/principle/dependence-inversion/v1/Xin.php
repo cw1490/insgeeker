@@ -10,7 +10,7 @@ namespace di\v1;
 class Xin
 {
 
-    public function grabBoosData() {
+    public function grabBossData() {
         echo "抓取 boss 直聘数据" . PHP_EOL;
     }
 

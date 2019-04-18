@@ -15,7 +15,7 @@ class Test
     {
 
         $xin = new Xin();
-        $xin->grabBoosData();
+        $xin->grabBossData();
         $xin->grabMaiData();
     }
 }
